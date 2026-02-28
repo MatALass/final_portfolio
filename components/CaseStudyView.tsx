@@ -12,23 +12,23 @@ type Project = {
   slug: string;
   title: string;
   short: string;
-  tags: string[];
-  stack: string[];
+  tags: readonly string[]; // <-- readonly accepté
+  stack: readonly string[]; // <-- readonly accepté
   year: string;
-  highlights: string[];
-  links?: { label: string; href: string }[];
+  highlights: readonly string[]; // <-- readonly accepté
+  links?: readonly { label: string; href: string }[]; // <-- readonly accepted
 
   caseStudy?: {
     problem: string;
-    approach: { body: string; bullets?: string[] };
+    approach: { body: string; bullets?: readonly string[] };
     architecture: { body: string; code?: string };
     results: { body: string; highlight?: string };
     improvements?: string;
     screenshots?: string;
 
     // optionnels (si présents dans data/projects.ts)
-    kpis?: KPI[];
-    timeline?: Step[];
+    kpis?: readonly KPI[];
+    timeline?: readonly Step[];
   };
 };
 
@@ -42,12 +42,12 @@ export default function CaseStudyView({
   const L = locale === "fr";
 
   const kpis: KPI[] =
-    project.caseStudy?.kpis ?? [
+    (project.caseStudy?.kpis ?? [
       { label: L ? "Année" : "Year", value: project.year },
       { label: L ? "Stack" : "Stack", value: `${project.stack.length}` },
       { label: L ? "Tags" : "Tags", value: `${project.tags.length}` },
       { label: L ? "Highlights" : "Highlights", value: `${project.highlights.length}` },
-    ];
+    ]) as KPI[]; // cast to mutable for rendering mapping
 
   const hasTimeline =
     !!project.caseStudy?.timeline && project.caseStudy.timeline.length > 0;
@@ -193,7 +193,7 @@ export default function CaseStudyView({
                   : "Describe how you structured the solution (sources, transformations, validation, outputs).")
               }
               bullets={
-                project.caseStudy?.approach.bullets ?? [
+                (project.caseStudy?.approach.bullets as readonly string[]) ?? [
                   L ? "Choix de modèle / design" : "Design choices",
                   L ? "Qualité & validation" : "Quality & validation",
                   L ? "Reproductibilité" : "Reproducibility",
@@ -286,7 +286,7 @@ function Card({
 }: {
   title: string;
   body: string;
-  bullets?: string[];
+  bullets?: readonly string[];
   code?: string;
   highlight?: string;
 }) {

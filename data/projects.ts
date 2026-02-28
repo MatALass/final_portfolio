@@ -253,7 +253,6 @@ export const projects = [
       "Backtest ROI + drawdown tracking",
       "Kelly sizing for risk management",
     ],
-    links: [{ label: "Notebook", href: "#" }],
     caseStudy: {
       problem:
         "Passer d’un modèle ‘accuracy’ à un système complet orienté décision (ROI, variance, sizing), sans leakage temporel.",
